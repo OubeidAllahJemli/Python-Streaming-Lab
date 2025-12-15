@@ -8,7 +8,7 @@ stream by reading events from a CSV file and sending them one by one into a queu
 
 import csv
 import time
-import random
+import random   
 from queue import Queue
 
 class CSVProducer:
@@ -21,6 +21,10 @@ class CSVProducer:
 
        TODO : Implement the __init__ method to initialize the producer.
        """
+        self.csv_path = csv_path
+        self.q = q
+        self.delay = delay
+        
     def start(self):
         """
         This method should:
@@ -29,12 +33,17 @@ class CSVProducer:
         3. Print the row being sent.
         4. Push it into the queue 
         5. Sleep for 'delay' seconds to simulate streaming.
-
         TODO:
         - Implement the streaming behavior.
         - Optional: Add random jitter to simulate irregular network delays.
         """
-      
+        with open(self.csv_path, newline='') as csvfile:
+            filereader = csv.DictReader(csvfile)
+            for row in filereader:
+                print(row)
+                self.q.put(row)
+                time.sleep(self.delay)
+       
 
 
 # Debugging test
@@ -46,4 +55,8 @@ if __name__ == "__main__":
     Expected behavior:
     - It should print rows from the CSV file every 'delay' seconds.
     """
-   
+    testqueue=Queue()
+    producer=CSVProducer(csv_path='transactions.csv', q=testqueue,delay=1.0)
+    producer.start()
+
+
