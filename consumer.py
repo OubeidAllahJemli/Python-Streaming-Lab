@@ -8,7 +8,7 @@ The Consumer runs forever, just like a streaming system.
 """
 
 import time
-from queue import Queue
+from queue import Queue, Empty
 
 class Consumer:
     def __init__(self, q):
@@ -21,6 +21,7 @@ class Consumer:
         - Initialize any state variables you may want later,
           e.g. a running total for stateful computations.
         """
+        self.q = q
         
 
     def start(self):
@@ -32,7 +33,13 @@ class Consumer:
         - Print the event received.
         - Pass it to the process() function.
         """
-    
+        print("ok")
+        while True:
+                item = self.q.get()
+                print(item)
+                self.process(item)
+
+        
 
     def process(self, event):
         """
@@ -42,7 +49,12 @@ class Consumer:
         - Implement optional filtering conditions.
         - Update any state (example: running total).
         """
-   
+        time.sleep(0.5)
+        fevent=float(event['amount'])
+        if fevent < 100.0:
+            print("amount is less than 100")
+
+        
 
 # Debugging test
 
@@ -55,3 +67,4 @@ if __name__ == "__main__":
     q = Queue()
     consumer = Consumer(q)
     consumer.start()
+    
